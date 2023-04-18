@@ -4,6 +4,7 @@
 #include "Device/Register.hpp"
 #include "Device/Driver.hpp"
 #include "Device/Driver/AirControlDisplay.hpp"
+#include "Device/Driver/AR62xx.hpp"
 #include "Device/Driver/CAI302.hpp"
 #include "Device/Driver/CaiGpsNav.hpp"
 #include "Device/Driver/CaiLNav.hpp"
@@ -51,6 +52,7 @@ static const struct DeviceRegister *const driver_list[] = {
   &cai302_driver,
   &ew_driver,
   &altair_pro_driver,
+  &ar62xx_driver,
   &vega_driver,
   &gps_nav_driver,
   &nmea_out_driver,
