@@ -126,6 +126,7 @@ TEST_NAMES = \
 	TestByteSizeFormatter \
 	TestTimeFormatter \
 	TestIGCFilenameFormatter \
+	TestNMEAFormatter \
 	TestLXNToIGC \
 	TestLeastSquares \
 	TestHexString \
@@ -494,6 +495,21 @@ TEST_IGC_FILENAME_FORMATTER_SOURCES = \
 TEST_IGC_FILENAME_FORMATTER_DEPENDS = MATH UTIL TIME
 $(eval $(call link-program,TestIGCFilenameFormatter,TEST_IGC_FILENAME_FORMATTER))
 
+TEST_NMEA_FORMATTER_SOURCES = \
+ 	$(SRC)/Units/Descriptor.cpp \
+ 	$(SRC)/Units/System.cpp \
+ 	$(SRC)/Atmosphere/AirDensity.cpp \
+ 	$(SRC)/Device/Parser.cpp \
+ 	$(SRC)/Device/Driver/FLARM/StaticParser.cpp \
+ 	$(SRC)/FLARM/Traffic.cpp \
+ 	$(SRC)/FLARM/FlarmId.cpp \
+ 	$(SRC)/Formatter/NMEAFormatter.cpp \
+ 	$(TEST_SRC_DIR)/tap.c \
+ 	$(TEST_SRC_DIR)/FakeGeoid.cpp \
+ 	$(TEST_SRC_DIR)/TestNMEAFormatter.cpp
+ TEST_NMEA_FORMATTER_DEPENDS = LIBNMEA GEO MATH IO UTIL TIME
+ $(eval $(call link-program,TestNMEAFormatter,TEST_NMEA_FORMATTER))
+
 TEST_STRINGS_SOURCES = \
 	$(TEST_SRC_DIR)/tap.c \
 	$(TEST_SRC_DIR)/TestStrings.cpp
@@ -671,6 +687,7 @@ TEST_DRIVER_SOURCES = \
 	$(SRC)/Atmosphere/Pressure.cpp \
 	$(SRC)/Atmosphere/AirDensity.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(ENGINE_SRC_DIR)/Waypoint/Waypoint.cpp \
 	$(TEST_SRC_DIR)/tap.c \
 	$(TEST_SRC_DIR)/FakeMessage.cpp \
@@ -857,6 +874,7 @@ DEBUG_REPLAY_SOURCES = \
 	$(SRC)/IGC/Generator.cpp \
 	$(SRC)/Units/Descriptor.cpp \
 	$(SRC)/Units/System.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(ENGINE_SRC_DIR)/Airspace/AirspaceWarningConfig.cpp \
 	$(ENGINE_SRC_DIR)/ThermalBand/ThermalBand.cpp \
 	$(ENGINE_SRC_DIR)/ThermalBand/ThermalSlice.cpp \
@@ -1314,6 +1332,7 @@ RUN_DEVICE_DRIVER_SOURCES = \
 	$(SRC)/Atmosphere/AirDensity.cpp \
 	$(SRC)/Atmosphere/Pressure.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeMessage.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
 	$(TEST_SRC_DIR)/FakeGeoid.cpp \
@@ -1335,6 +1354,7 @@ RUN_DECLARE_SOURCES = \
 	$(SRC)/Atmosphere/AirDensity.cpp \
 	$(SRC)/Atmosphere/Pressure.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
 	$(TEST_SRC_DIR)/FakeGeoid.cpp \
 	$(TEST_SRC_DIR)/FakeMessage.cpp \
@@ -1359,6 +1379,7 @@ RUN_ENABLE_NMEA_SOURCES = \
 	$(SRC)/Atmosphere/AirDensity.cpp \
 	$(SRC)/Atmosphere/Pressure.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeLogFile.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
 	$(TEST_SRC_DIR)/FakeGeoid.cpp \
@@ -1373,8 +1394,11 @@ RUN_VEGA_SETTINGS_SOURCES = \
 	$(SRC)/Device/Util/NMEAWriter.cpp \
 	$(SRC)/Device/Util/NMEAReader.cpp \
 	$(SRC)/Device/Port/ConfiguredPort.cpp \
+	$(SRC)/Units/Descriptor.cpp \
+ 	$(SRC)/Units/System.cpp \
 	$(SRC)/Device/Config.cpp \
 	$(SRC)/Operation/ConsoleOperationEnvironment.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeMessage.cpp \
 	$(TEST_SRC_DIR)/FakeLogFile.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
@@ -1428,6 +1452,7 @@ RUN_FLIGHT_LIST_SOURCES = \
 	$(SRC)/Atmosphere/AirDensity.cpp \
 	$(SRC)/Atmosphere/Pressure.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
 	$(TEST_SRC_DIR)/FakeMessage.cpp \
 	$(TEST_SRC_DIR)/FakeDialogs.cpp \
@@ -1451,6 +1476,7 @@ RUN_DOWNLOAD_FLIGHT_SOURCES = \
 	$(SRC)/Atmosphere/AirDensity.cpp \
 	$(SRC)/Atmosphere/Pressure.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
 	$(TEST_SRC_DIR)/FakeMessage.cpp \
 	$(TEST_SRC_DIR)/FakeDialogs.cpp \
@@ -1623,6 +1649,7 @@ RUN_CONTEST_SOURCES = \
 	$(DEBUG_REPLAY_SOURCES) \
 	$(SRC)/IGC/IGCParser.cpp \
 	$(SRC)/TransponderCode.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(ENGINE_SRC_DIR)/Trace/Point.cpp \
 	$(ENGINE_SRC_DIR)/Trace/Trace.cpp \
 	$(TEST_SRC_DIR)/FakeTerrain.cpp \
@@ -2456,11 +2483,14 @@ EMULATE_DEVICE_SOURCES = \
 	$(SRC)/Device/Util/LineSplitter.cpp \
 	$(SRC)/Device/Util/NMEAWriter.cpp \
 	$(SRC)/Device/Util/NMEAReader.cpp \
+	$(SRC)/Units/Descriptor.cpp \
+ 	$(SRC)/Units/System.cpp \
 	$(SRC)/Device/Driver/FLARM/BinaryProtocol.cpp \
 	$(SRC)/Device/Driver/FLARM/CRC16.cpp \
 	$(SRC)/Device/Config.cpp \
 	$(SRC)/io/CSVLine.cpp \
 	$(SRC)/Operation/ConsoleOperationEnvironment.cpp \
+	$(SRC)/Formatter/NMEAFormatter.cpp \
 	$(TEST_SRC_DIR)/FakeLogFile.cpp \
 	$(TEST_SRC_DIR)/FakeLanguage.cpp \
 	$(TEST_SRC_DIR)/DebugPort.cpp \
