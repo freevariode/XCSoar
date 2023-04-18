@@ -20,7 +20,7 @@ The XCSoar source code is managed with [git](http://git-scm.com/). It can be
 downloaded with the following command:
 
 ```bash
-git clone --recursive https://github.com/XCSoar/XCSoar
+git clone --recursive https://github.com/freevariode/XCSoar
 ```
 
 To update your repository, type:
