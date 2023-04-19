@@ -55,6 +55,7 @@ ACDDevice::OnCalculatedUpdate(const MoreData &basic,const DerivedInfo &calculate
     }
 }
 
+
 bool
 ACDDevice::ParsePAAVS(NMEAInputLine &line, NMEAInfo &info,Port &port)
 {
