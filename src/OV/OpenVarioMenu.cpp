@@ -1051,8 +1051,13 @@ private:
   void Show(const PixelRect &rc) noexcept override {
     RowFormWidget::Show(rc);
 
-    if (remaining_seconds > 0)
+    if (remaining_seconds > 0) {
       ScheduleTimer();
+    }
+    else {
+	  HideRow(Controls::TIMER);
+      StartXCSoar();
+	}
   }
 
   void Hide() noexcept override {
