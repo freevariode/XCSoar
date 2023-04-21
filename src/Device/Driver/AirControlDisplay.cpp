@@ -46,9 +46,9 @@ void
 ACDDevice::OnCalculatedUpdate(const MoreData &basic,const DerivedInfo &calculated)
 {
    NullOperationEnvironment env;
-   char buffer[100];
   
     if (basic.settings.qnh_available.IsValid()){
+	  char buffer[100];
       unsigned qnh = basic.settings.qnh.GetPascal();
       sprintf(buffer,"PAAVC,S,ALT,QNH,%u",qnh);
       PortWriteNMEA(port, buffer, env);

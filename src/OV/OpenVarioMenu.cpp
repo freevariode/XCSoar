@@ -642,7 +642,6 @@ ScreenSSHWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
                      UIGlobals::GetDialogLook(),
                      "Disable", argv);
   });
-
 }
 
 class ScreenVariodWidget final
@@ -690,7 +689,6 @@ ScreenVariodWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
                      UIGlobals::GetDialogLook(),
                      "Disable", argv);
   });
-
 }
 
 class ScreenSensordWidget final
@@ -967,7 +965,7 @@ SystemMenuWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
     sub_dialog.SetWidget(display, event_queue, sub_dialog); 
     sub_dialog.AddButton(_("Close"), mrOK);
     return sub_dialog.ShowModal();
-  });    
+  });  
 
   AddButton("System Info", [](){
     static constexpr const char *argv[] = {
