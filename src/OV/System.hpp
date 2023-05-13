@@ -38,6 +38,9 @@ OpenvarioGetRotation();
 void
 OpenvarioSetRotation(DisplayOrientation orientation);
 
+void
+OpenvarioSetLanguage(const char* lang);
+
 [[gnu::pure]]
 SSHStatus
 OpenvarioGetSSHStatus();

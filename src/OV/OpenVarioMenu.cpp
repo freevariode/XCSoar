@@ -25,6 +25,7 @@
 #include "util/PrintException.hxx"
 #include "util/ScopeExit.hxx"
 #include "LocalPath.hpp"
+#include "SystemDialog.hpp"
 
 #include <cassert>
 #include <cstdio>
@@ -235,11 +236,7 @@ SystemMenuWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
     Run("/usr/bin/ov-calibrate-ts.sh");
   });
 
-  AddButton("System Settings", [this](){
-    const UI::ScopeDropMaster drop_master{display};
-    const UI::ScopeSuspendEventQueue suspend_event_queue{event_queue};
-    Run("/usr/lib/openvario/libexec/system_settings.sh");
-  });
+  AddButton("System Settings", [](){ ShowSystemDialog(); });
 
   AddButton("System Info", [this](){
     const UI::ScopeDropMaster drop_master{display};

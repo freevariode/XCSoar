@@ -113,6 +113,13 @@ OpenvarioSetRotation(DisplayOrientation orientation)
   WriteConfigFile(map, Path("/boot/config.uEnv"));
 }
 
+void
+OpenvarioSetLanguage(const char* lang)
+{
+  Run("localectl", "set-locale", lang);
+  Run("export", fmt::format("LANG={}", lang).c_str());
+}
+
 SSHStatus
 OpenvarioGetSSHStatus()
 {
