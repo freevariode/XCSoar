@@ -104,6 +104,30 @@ private:
                const PixelRect &rc) noexcept override;
 };
 
+class VARIODWidget final
+  : public RowFormWidget {
+
+  enum Buttons {
+    ENABLE_VARIOD,
+    DISABLE_VARIOD,
+  };
+
+  Button *enable_variod;
+  Button *disable_variod;
+
+public:
+  explicit VARIODWidget(const DialogLook &look):RowFormWidget(look) {}
+
+private:
+  void EnableVARIOD();
+  void DisableVARIOD();
+  void UpdateVARIODButtons();
+
+  /* virtual methods from class Widget */
+  void Prepare(ContainerWindow &parent,
+               const PixelRect &rc) noexcept override;
+};
+
 void
 SystemWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
                       [[maybe_unused]] const PixelRect &rc) noexcept
@@ -133,6 +157,15 @@ SystemWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
     const DialogLook &look = UIGlobals::GetDialogLook();
     TWidgetDialog<SSHWidget>
       dialog(WidgetDialog::Full{}, UIGlobals::GetMainWindow(), look, "SSH");
+    dialog.AddButton(_("Close"), mrOK);
+    dialog.SetWidget(look);
+    dialog.ShowModal();
+  });
+
+  AddButton("Variod", [](){ 
+    const DialogLook &look = UIGlobals::GetDialogLook();
+    TWidgetDialog<VARIODWidget>
+      dialog(WidgetDialog::Full{}, UIGlobals::GetMainWindow(), look, "Variod");
     dialog.AddButton(_("Close"), mrOK);
     dialog.SetWidget(look);
     dialog.ShowModal();
@@ -279,6 +312,44 @@ SSHWidget::UpdateSSHButtons()
     disable_ssh->SetEnabled(
       status == SSHStatus::ENABLED ||
       status == SSHStatus::TEMPORARY);
+  }
+}
+
+void
+VARIODWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
+                   [[maybe_unused]] const PixelRect &rc) noexcept
+{
+  enable_variod = AddButton("Enable Variod", [this]() { EnableVARIOD(); });
+  disable_variod = AddButton("Disable Variod", [this]() { DisableVARIOD(); });
+  UpdateVARIODButtons();
+}
+
+inline void
+VARIODWidget::EnableVARIOD()
+{
+  OpenvarioEnableVARIOD();
+  UpdateVARIODButtons();
+}
+
+inline void
+VARIODWidget::DisableVARIOD()
+{
+  OpenvarioDisableVARIOD();
+  UpdateVARIODButtons();
+}
+
+inline void
+VARIODWidget::UpdateVARIODButtons()
+{
+  VARIODStatus status = OpenvarioGetVARIODStatus();
+
+  if (enable_variod != nullptr) {
+    enable_variod->SetEnabled(
+      status == VARIODStatus::DISABLED);
+  }
+  if (disable_variod != nullptr) {
+    disable_variod->SetEnabled(
+      status == VARIODStatus::ENABLED);
   }
 }
 

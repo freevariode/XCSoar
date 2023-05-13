@@ -15,6 +15,11 @@ enum class SSHStatus {
   DISABLED,
   TEMPORARY,
 };
+
+enum class VARIODStatus {
+  ENABLED,
+  DISABLED,
+};
 /**
  * Load a system config file and put its variables into a map
 */
@@ -50,3 +55,12 @@ OpenvarioEnableSSH(bool temporary);
 
 bool
 OpenvarioDisableSSH();
+
+VARIODStatus
+OpenvarioGetVARIODStatus();
+
+bool
+OpenvarioEnableVARIOD();
+
+bool
+OpenvarioDisableVARIOD();

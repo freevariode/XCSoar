@@ -148,3 +148,25 @@ OpenvarioDisableSSH()
 {
   return Run("/bin/systemctl", "disable", "--now", "dropbear.socket");
 }
+
+VARIODStatus
+OpenvarioGetVARIODStatus()
+{
+  if (Run("/bin/systemctl", "--quiet", "is-enabled", "variod")) {
+    return VARIODStatus::ENABLED;
+  } else {
+    return VARIODStatus::DISABLED;
+  }
+}
+
+bool
+OpenvarioEnableVARIOD()
+{
+  return Run("/bin/systemctl", "enable", "--now", "variod");
+}
+
+bool
+OpenvarioDisableVARIOD()
+{
+  return Run("/bin/systemctl", "disable", "--now", "variod");
+}
