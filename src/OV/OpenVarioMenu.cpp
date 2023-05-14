@@ -262,10 +262,14 @@ SystemMenuWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
 
   AddButton("System Settings", [](){ ShowSystemDialog(); });
 
-  AddButton("System Info", [this](){
-    const UI::ScopeDropMaster drop_master{display};
-    const UI::ScopeSuspendEventQueue suspend_event_queue{event_queue};
-    Run("/usr/lib/openvario/libexec/system_info.sh");
+  AddButton("System Info", [](){
+    static constexpr const char *argv[] = {
+      "/usr/bin/system-info.sh", nullptr
+    };
+
+    RunProcessDialog(UIGlobals::GetMainWindow(),
+                     UIGlobals::GetDialogLook(),
+                     "System Info", argv);
   });
 }
 
