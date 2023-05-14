@@ -102,7 +102,7 @@ OpenvarioSetRotation(DisplayOrientation orientation)
     rotation = 2;
     break;
   case DisplayOrientation::REVERSE_PORTRAIT:
-    rotation = 3;
+    rotation = 2;
     break;
   };
 
@@ -169,4 +169,26 @@ bool
 OpenvarioDisableVARIOD()
 {
   return Run("/bin/systemctl", "disable", "--now", "variod");
+}
+
+SENSORDStatus
+OpenvarioGetSENSORDStatus()
+{
+  if (Run("/bin/systemctl", "--quiet", "is-enabled", "sensord")) {
+    return SENSORDStatus::ENABLED;
+  } else {
+    return SENSORDStatus::DISABLED;
+  }
+}
+
+bool
+OpenvarioEnableSENSORD()
+{
+  return Run("/bin/systemctl", "enable", "--now", "sensord");
+}
+
+bool
+OpenvarioDisableSENSORD()
+{
+  return Run("/bin/systemctl", "disable", "--now", "sensord");
 }

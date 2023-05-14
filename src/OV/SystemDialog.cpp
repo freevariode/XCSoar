@@ -128,6 +128,30 @@ private:
                const PixelRect &rc) noexcept override;
 };
 
+class SENSORDWidget final
+  : public RowFormWidget {
+
+  enum Buttons {
+    ENABLE_SENSORD,
+    DISABLE_SENSORD,
+  };
+
+  Button *enable_sensord;
+  Button *disable_sensord;
+
+public:
+  explicit SENSORDWidget(const DialogLook &look):RowFormWidget(look) {}
+
+private:
+  void EnableSENSORD();
+  void DisableSENSORD();
+  void UpdateSENSORDButtons();
+
+  /* virtual methods from class Widget */
+  void Prepare(ContainerWindow &parent,
+               const PixelRect &rc) noexcept override;
+};
+
 void
 SystemWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
                       [[maybe_unused]] const PixelRect &rc) noexcept
@@ -166,6 +190,15 @@ SystemWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
     const DialogLook &look = UIGlobals::GetDialogLook();
     TWidgetDialog<VARIODWidget>
       dialog(WidgetDialog::Full{}, UIGlobals::GetMainWindow(), look, "Variod");
+    dialog.AddButton(_("Close"), mrOK);
+    dialog.SetWidget(look);
+    dialog.ShowModal();
+  });
+
+  AddButton("Sensord", [](){ 
+    const DialogLook &look = UIGlobals::GetDialogLook();
+    TWidgetDialog<SENSORDWidget>
+      dialog(WidgetDialog::Full{}, UIGlobals::GetMainWindow(), look, "Sensord");
     dialog.AddButton(_("Close"), mrOK);
     dialog.SetWidget(look);
     dialog.ShowModal();
@@ -350,6 +383,44 @@ VARIODWidget::UpdateVARIODButtons()
   if (disable_variod != nullptr) {
     disable_variod->SetEnabled(
       status == VARIODStatus::ENABLED);
+  }
+}
+
+void
+SENSORDWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
+                   [[maybe_unused]] const PixelRect &rc) noexcept
+{
+  enable_sensord = AddButton("Enable Sensord", [this]() { EnableSENSORD(); });
+  disable_sensord = AddButton("Disable Sensord", [this]() { DisableSENSORD(); });
+  UpdateSENSORDButtons();
+}
+
+inline void
+SENSORDWidget::EnableSENSORD()
+{
+  OpenvarioEnableSENSORD();
+  UpdateSENSORDButtons();
+}
+
+inline void
+SENSORDWidget::DisableSENSORD()
+{
+  OpenvarioDisableSENSORD();
+  UpdateSENSORDButtons();
+}
+
+inline void
+SENSORDWidget::UpdateSENSORDButtons()
+{
+  SENSORDStatus status = OpenvarioGetSENSORDStatus();
+
+  if (enable_sensord != nullptr) {
+    enable_sensord->SetEnabled(
+      status == SENSORDStatus::DISABLED);
+  }
+  if (disable_sensord != nullptr) {
+    disable_sensord->SetEnabled(
+      status == SENSORDStatus::ENABLED);
   }
 }
 

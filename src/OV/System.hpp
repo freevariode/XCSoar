@@ -20,6 +20,12 @@ enum class VARIODStatus {
   ENABLED,
   DISABLED,
 };
+
+enum class SENSORDStatus {
+  ENABLED,
+  DISABLED,
+};
+
 /**
  * Load a system config file and put its variables into a map
 */
@@ -64,3 +70,12 @@ OpenvarioEnableVARIOD();
 
 bool
 OpenvarioDisableVARIOD();
+
+SENSORDStatus
+OpenvarioGetSENSORDStatus();
+
+bool
+OpenvarioEnableSENSORD();
+
+bool
+OpenvarioDisableSENSORD();
