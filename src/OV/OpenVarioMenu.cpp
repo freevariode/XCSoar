@@ -110,6 +110,17 @@ FileMenuWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
                      UIGlobals::GetDialogLook(),
                      "Uploading files", argv);
   });
+
+  AddButton("Update Maps", [](){
+    static constexpr const char *argv[] = {
+      "/usr/bin/update-maps.sh", nullptr
+    };
+
+    RunProcessDialog(UIGlobals::GetMainWindow(),
+                     UIGlobals::GetDialogLook(),
+                     "Update Maps", argv);
+  });
+
 }
 
 class SystemMenuWidget final
@@ -218,16 +229,6 @@ SystemMenuWidget::Prepare([[maybe_unused]] ContainerWindow &parent,
     RunProcessDialog(UIGlobals::GetMainWindow(),
                      UIGlobals::GetDialogLook(),
                      "Update System", argv);
-  });
-
-  AddButton("Update Maps", [](){
-    static constexpr const char *argv[] = {
-      "/usr/bin/update-maps.sh", nullptr
-    };
-
-    RunProcessDialog(UIGlobals::GetMainWindow(),
-                     UIGlobals::GetDialogLook(),
-                     "Update Maps", argv);
   });
 
   AddButton("Calibrate Sensors", CalibrateSensors);
