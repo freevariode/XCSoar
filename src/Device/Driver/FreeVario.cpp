@@ -58,7 +58,7 @@ public:
  * Is true when a valid message or false if no valid message
  */
 bool
-FreeVarioDevice::PFVParserAndForward(NMEAInputLine &line, NMEAInfo &info, Port &port)
+FreeVarioDevice::PFVParserAndForward(NMEAInputLine &line, [[maybe_unused]] NMEAInfo &info, [[maybe_unused]] Port &port)
 {
   NullOperationEnvironment env;
   bool messageValid = false;
@@ -376,7 +376,7 @@ FreeVarioDevice::PutQNH(const AtmosphericPressure &pres,OperationEnvironment &en
 }
 
 static Device *
-FreeVarioCreateOnPort(const DeviceConfig &config, Port &com_port){
+FreeVarioCreateOnPort([[maybe_unused]] const DeviceConfig &config, Port &com_port){
   return new FreeVarioDevice(com_port);  
 }
 
