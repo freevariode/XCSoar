@@ -3,7 +3,7 @@
 
 #include "LayoutConfigPanel.hpp"
 #include "ui/canvas/Features.hpp" // for DRAW_MOUSE_CURSOR
-#include "Profile/ProfileKeys.hpp"
+#include "Profile/Keys.hpp"
 #include "Profile/Profile.hpp"
 #include "Form/DataField/Enum.hpp"
 #include "Hardware/RotateDisplay.hpp"
@@ -305,7 +305,7 @@ LayoutConfigPanel::Save(bool &_changed) noexcept
       Display::RotateRestore();
     else {
       if (!Display::Rotate(ui_settings.display.orientation))
-        LogFormat("Display rotation failed");
+        LogString("Display rotation failed");
     }
 
 #ifdef USE_POLL_EVENT

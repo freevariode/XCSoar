@@ -102,6 +102,7 @@ include $(topdir)/build/flags.mk
 include $(topdir)/build/charset.mk
 include $(topdir)/build/warnings.mk
 include $(topdir)/build/host.mk
+include $(topdir)/build/depends.mk
 include $(topdir)/build/compile.mk
 include $(topdir)/build/link.mk
 include $(topdir)/build/resource.mk
@@ -126,6 +127,7 @@ include $(topdir)/build/libjson.mk
 
 ifeq ($(FAT_BINARY),n)
 # Create libraries for zzip, jasper and compatibility stuff
+include $(topdir)/build/libfmt.mk
 include $(topdir)/build/libresource.mk
 include $(topdir)/build/liblook.mk
 include $(topdir)/build/libstdcxx.mk

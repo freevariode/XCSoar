@@ -5,7 +5,7 @@
 #include "Airspace/AirspaceParser.hpp"
 #include "Engine/Airspace/Airspaces.hpp"
 #include "Atmosphere/Pressure.hpp"
-#include "Profile/ProfileKeys.hpp"
+#include "Profile/Keys.hpp"
 #include "Operation/Operation.hpp"
 #include "Language/Language.hpp"
 #include "LogFile.hpp"
@@ -67,7 +67,7 @@ ReadAirspace(Airspaces &airspaces,
              AtmosphericPressure press,
              OperationEnvironment &operation)
 {
-  LogFormat("ReadAirspace");
+  LogString("ReadAirspace");
   operation.SetText(_("Loading Airspace File..."));
 
   bool airspace_ok = false;

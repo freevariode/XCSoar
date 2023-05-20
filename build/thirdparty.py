@@ -113,6 +113,7 @@ from build.libs import *
 if 'mingw32' in actual_host_triplet:
     thirdparty_libs = [
         zlib,
+        libfmt,
         libsodium,
         cares,
         curl,
@@ -126,21 +127,9 @@ if 'mingw32' in actual_host_triplet:
     # mingw.  This prevents some libraries such as libsodium to enable
     # it.
     cppflags += ' -D_FORTIFY_SOURCE=0'
-elif re.match('(arm.*|aarch64)-apple-darwin', actual_host_triplet) is not None:
-    thirdparty_libs = [
-        libsodium,
-        openssl,
-        cares,
-        curl,
-        lua,
-        sqlite3,
-        proj,
-        libtiff,
-        libgeotiff,
-        sdl2
-    ]
 elif 'apple-darwin' in actual_host_triplet:
     thirdparty_libs = [
+        libfmt,
         libsodium,
         openssl,
         cares,
@@ -154,6 +143,7 @@ elif 'apple-darwin' in actual_host_triplet:
     ]
 elif 'android' in actual_host_triplet:
     thirdparty_libs = [
+        libfmt,
         libsodium,
         openssl,
         cares,
@@ -167,6 +157,7 @@ elif 'android' in actual_host_triplet:
 elif toolchain_host_triplet.endswith('-musleabihf'):
     thirdparty_libs = [
         zlib,
+        libfmt,
         libsodium,
         freetype,
         openssl,
@@ -187,6 +178,7 @@ else:
         musl,
         gcc,
         zlib,
+        libfmt,
         libsodium,
         freetype,
         openssl,

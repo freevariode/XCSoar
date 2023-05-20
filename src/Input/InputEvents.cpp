@@ -32,7 +32,7 @@ doc/html/advanced/input/ALL		http://xcsoar.sourceforge.net/advanced/input/
 #include "Protection.hpp"
 #include "LogFile.hpp"
 #include "Menu/ButtonLabel.hpp"
-#include "Profile/ProfileKeys.hpp"
+#include "Profile/Keys.hpp"
 #include "Menu/MenuData.hpp"
 #include "io/ConfiguredFile.hpp"
 #include "io/LineReader.hpp"
@@ -103,7 +103,7 @@ static InputConfig input_config;
 void
 InputEvents::readFile()
 {
-  LogFormat("Loading input events file");
+  LogString("Loading input events file");
 
   // clear the GCE and NMEA queues
   ClearQueues();

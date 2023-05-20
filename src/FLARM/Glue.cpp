@@ -17,7 +17,7 @@
 #include "Profile/Current.hpp"
 #include "LogFile.hpp"
 #include "Profile/Profile.hpp"
-#include "Profile/ProfileKeys.hpp"
+#include "Profile/Keys.hpp"
 
 /**
  * Loads the FLARMnet file
@@ -45,7 +45,7 @@ try {
 static void
 LoadSecondary(FlarmNameDatabase &db)
 try {
-  LogFormat("OpenFLARMDetails");
+  LogString("OpenFLARMDetails");
 
   auto reader = OpenDataTextFile(_T("xcsoar-flarm.txt"));
   LoadFlarmNameFile(*reader, db);
