@@ -19,9 +19,10 @@
 #include "Interface.hpp"
 #include "Overlay.hpp"
 
-bool GlueMapWindow::ShowMapItems(const GeoPoint &location,
-                                 bool show_empty_message,
-                                 bool pointer_in_use) const
+bool
+GlueMapWindow::ShowMapItems(const GeoPoint &location,
+                            bool show_empty_message,
+                            bool pointer_in_use) const noexcept
 {
   /* not using MapWindowBlackboard here because this method is called
      by the main thread */
@@ -65,8 +66,10 @@ bool GlueMapWindow::ShowMapItems(const GeoPoint &location,
   if (visible_projection.GetMapScale() <= 4000) {
     builder.AddThermals(calculated.thermal_locator, basic, calculated);
 
-    if (tim_glue != nullptr && computer_settings.weather.enable_tim)
+    if (tim_glue != nullptr && computer_settings.weather.enable_tim) {
+      const auto lock = tim_glue->Lock();
       builder.AddThermals(tim_glue->Get());
+    }
   }
 
   if (waypoints)
@@ -112,6 +115,7 @@ bool GlueMapWindow::ShowMapItems(const GeoPoint &location,
   ShowMapItemListDialog(list,
                         UIGlobals::GetDialogLook(), look, traffic_look,
                         final_glide_bar_renderer.GetLook(), settings,
+                        waypoints,
                         glide_computer != nullptr
                         ? &glide_computer->GetAirspaceWarnings() : nullptr);
   return true;

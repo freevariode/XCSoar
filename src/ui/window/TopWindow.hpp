@@ -139,6 +139,7 @@ class TopWindow : public ContainerWindow {
 #ifdef DRAW_MOUSE_CURSOR
   uint8_t cursor_size = 1;
   bool invert_cursor_colors = false;
+  std::chrono::steady_clock::time_point cursor_visible_until;
 #endif
 
 #ifndef USE_WINUSER
@@ -415,10 +416,14 @@ protected:
 #endif
 
 #ifdef ANDROID
+  virtual void OnLook() noexcept {}
+
   /**
    * @see Event::SURFACE
    */
   void OnSurface() noexcept;
+
+  virtual void OnTaskReceived() noexcept {}
 
   /**
    * @see Event::PAUSE

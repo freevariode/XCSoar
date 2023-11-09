@@ -14,8 +14,8 @@
 #include "lib/curl/Easy.hxx"
 #include "lib/curl/Setup.hxx"
 #include "lib/fmt/RuntimeError.hxx"
+#include "lib/fmt/ToBuffer.hxx"
 #include "io/StringOutputStream.hxx"
-#include "util/ConvertString.hpp"
 
 #include <boost/json.hpp>
 
@@ -25,19 +25,12 @@ using std::string_view_literals::operator""sv;
 
 namespace WeGlide {
 
-Co::Task<std::unique_ptr<OrderedTask>>
-DownloadDeclaredTask(CurlGlobal &curl, const WeGlideSettings &settings,
-                     const TaskBehaviour &task_behaviour,
-                     const Waypoints *waypoints,
-                     ProgressListener &progress)
+static Co::Task<std::unique_ptr<OrderedTask>>
+DownloadTask(CurlGlobal &curl, CurlEasy easy,
+             const TaskBehaviour &task_behaviour,
+             const Waypoints *waypoints,
+             ProgressListener &progress)
 {
-  assert(settings.pilot_id != 0);
-
-  char url[256];
-  snprintf(url, sizeof(url), "%s/task/declaration/%u?cup=false&tsk=true",
-           settings.default_url, settings.pilot_id);
-
-  CurlEasy easy{url};
   Curl::Setup(easy);
   const Net::ProgressAdapter progress_adapter{easy, progress};
 
@@ -66,12 +59,41 @@ DownloadDeclaredTask(CurlGlobal &curl, const WeGlideSettings &settings,
      eventually, so let's just ignore the Content-Type for now and
      hope the XML parser catches syntax errors */
 
-  const auto xml_node = XML::ParseString(UTF8ToWideConverter{sos.GetValue().c_str()});
+  const auto xml_node = XML::ParseString(sos.GetValue());
   const ConstDataNodeXML data_node{xml_node};
 
   auto task = std::make_unique<OrderedTask>(task_behaviour);
   LoadTask(*task, data_node, waypoints);
   co_return task;
+}
+
+Co::Task<std::unique_ptr<OrderedTask>>
+DownloadTask(CurlGlobal &curl, const WeGlideSettings &settings,
+             uint_least64_t task_id,
+             const TaskBehaviour &task_behaviour,
+             const Waypoints *waypoints,
+             ProgressListener &progress)
+{
+  const auto url = FmtBuffer<256>("{}/task/{}?cup=false&tsk=true",
+                                  settings.default_url, task_id);
+  return DownloadTask(curl, CurlEasy{url},
+                      task_behaviour, waypoints,
+                      progress);
+}
+
+Co::Task<std::unique_ptr<OrderedTask>>
+DownloadDeclaredTask(CurlGlobal &curl, const WeGlideSettings &settings,
+                     const TaskBehaviour &task_behaviour,
+                     const Waypoints *waypoints,
+                     ProgressListener &progress)
+{
+  assert(settings.pilot_id != 0);
+
+  const auto url = FmtBuffer<256>("{}/task/declaration/{}?cup=false&tsk=true",
+                                  settings.default_url, settings.pilot_id);
+  return DownloadTask(curl, CurlEasy{url},
+                      task_behaviour, waypoints,
+                      progress);
 }
 
 } // namespace WeGlide

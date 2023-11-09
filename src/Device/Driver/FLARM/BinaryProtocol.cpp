@@ -6,6 +6,7 @@
 #include "Device/Error.hpp"
 #include "Device/Port/Port.hpp"
 #include "time/TimeoutClock.hpp"
+#include "util/SpanCast.hxx"
 
 #include <algorithm> // for std::find_if()
 
@@ -18,13 +19,13 @@ FindSpecial(std::span<const std::byte>::iterator begin,
   });
 }
 
-/* kludge because several constructor overloads are missing in libc++
-   on Android NDK r25c */
+/* kludge because several constructor overloads are missing in Apple
+   Xcode */
 static constexpr std::span<const std::byte>
 MakeSpan(typename std::span<const std::byte>::iterator begin,
          typename std::span<const std::byte>::iterator end) noexcept
 {
-#if defined(ANDROID) || defined(__APPLE__)
+#if defined(__APPLE__)
   return {&*begin, (std::size_t)std::distance(begin, end)};
 #else
   return {begin, end};
@@ -178,7 +179,7 @@ FlarmDevice::SendFrameHeader(const FLARM::FrameHeader &header,
                              OperationEnvironment &env,
                              std::chrono::steady_clock::duration timeout)
 {
-  SendEscaped(std::as_bytes(std::span{&header, 1}), env, timeout);
+  SendEscaped(ReferenceAsBytes(header), env, timeout);
 }
 
 bool
@@ -186,7 +187,7 @@ FlarmDevice::ReceiveFrameHeader(FLARM::FrameHeader &header,
                                 OperationEnvironment &env,
                                 std::chrono::steady_clock::duration timeout)
 {
-  return ReceiveEscaped(std::as_writable_bytes(std::span{&header, 1}),
+  return ReceiveEscaped(ReferenceAsWritableBytes(header),
                         env, timeout);
 }
 

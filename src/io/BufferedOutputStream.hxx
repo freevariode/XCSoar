@@ -3,12 +3,11 @@
 
 #pragma once
 
-#include "util/Compiler.h"
 #include "util/DynamicFifoBuffer.hxx"
 #include "util/SpanCast.hxx"
 
 #include <fmt/core.h>
-#if FMT_VERSION < 70000 || FMT_VERSION >= 80000
+#if FMT_VERSION >= 80000 && FMT_VERSION < 90000
 #include <fmt/format.h>
 #endif
 
@@ -52,7 +51,7 @@ public:
 	 */
 	template<typename T>
 	void WriteT(const T &value) {
-		Write(std::as_bytes(std::span{&value, 1}));
+		Write(ReferenceAsBytes(value));
 	}
 
 	/**
@@ -69,12 +68,6 @@ public:
 		Write(AsBytes(src));
 	}
 
-	/**
-	 * Write a printf-style formatted string.
-	 */
-	gcc_printf(2,3)
-	void Format(const char *fmt, ...);
-
 	void VFmt(fmt::string_view format_str, fmt::format_args args);
 
 	template<typename S, typename... Args>
@@ -82,14 +75,10 @@ public:
 #if FMT_VERSION >= 90000
 		VFmt(format_str,
 		     fmt::make_format_args(args...));
-#elif FMT_VERSION >= 70000
+#else
 		VFmt(fmt::to_string_view(format_str),
 		     fmt::make_args_checked<Args...>(format_str,
 						     args...));
-#else
-		/* expensive fallback for older libfmt versions */
-		const auto result = fmt::format(format_str, args...);
-		Write(result.data(), result.size());
 #endif
 	}
 

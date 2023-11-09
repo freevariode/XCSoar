@@ -15,6 +15,7 @@
 #include "io/BufferedOutputStream.hxx"
 #include "io/FileOutputStream.hxx"
 #include "time/BrokenDateTime.hpp"
+#include "util/SpanCast.hxx"
 
 #include <memory>
 #include <stdexcept>
@@ -146,7 +147,7 @@ IMI::DeclarationWrite(Port &port, const Declaration &decl,
 
   // send declaration for current task
   SendRet(port, env, MSG_DECLARATION,
-          std::as_bytes(std::span{&imiDecl, 1}),
+          ReferenceAsBytes(imiDecl),
           MSG_ACK_SUCCESS, 0,
           -1, 0, 0,
           std::chrono::seconds{2});
@@ -183,9 +184,12 @@ IMI::ReadFlightList(Port &port, RecordedFlightList &flight_list,
       ifi.start_time = start;
       ifi.end_time = ConvertToDateTime(fi->finish);
       ifi.internal.imi = fi->address;
+
+      if (flight_list.full())
+        break;
     }
 
-    if (msg.payloadSize == 0 || address == 0xFFFF)
+    if (msg.payloadSize == 0 || address == 0xFFFF || flight_list.full())
       return true;
   }
 
