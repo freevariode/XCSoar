@@ -29,6 +29,7 @@ on:
 
 env:
   DEBUG: y
+  BOOST: boost_1_82_0
 
 jobs:
   build-ubuntu:
@@ -53,7 +54,17 @@ jobs:
       - id: cache-ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.type }}-${{ env.TARGET }}
+          key: ${{ env.TARGET }}
+
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
+
       - name: find githash
         run: |
           echo "git_hash=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
@@ -69,6 +80,8 @@ jobs:
             librsvg2-bin xsltproc \
             imagemagick gettext sox \
             zlib1g-dev \
+            libfmt-dev \
+            libdbus-1-dev \
             libsodium-dev \
             libfreetype6-dev \
             libpng-dev libjpeg-dev \
@@ -122,10 +135,19 @@ jobs:
       - id: cache-ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.type }}-${{ env.TARGET }}-sanitizer
+          key: ${{ env.TARGET }}-sanitizer
       - name: find githash
         run: |
           echo "git_hash=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
 
       - name: Install dependencies
         run: |
@@ -138,6 +160,8 @@ jobs:
             librsvg2-bin xsltproc \
             imagemagick gettext sox \
             zlib1g-dev \
+            libfmt-dev \
+            libdbus-1-dev \
             libsodium-dev \
             libfreetype6-dev \
             libpng-dev libjpeg-dev \
@@ -176,7 +200,16 @@ jobs:
       - id: cache-ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.type }}-${{ env.TARGET }}
+          key: ${{ env.TARGET }}
+
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
 
       - name: "Cache third-party libraries"
         uses: actions/cache@v3
@@ -243,6 +276,7 @@ jobs:
       TARGET_BIN: XCSoar-debug
       TARGET_FINAL: XCSoar-debug
       TARGET_EXT: apk
+      NDK: r26b
 
     steps:
       - name: set vars for push
@@ -259,7 +293,16 @@ jobs:
       - id: cache-ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.type }}-${{ env.TARGET }}
+          key: ${{ env.TARGET }}
+
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
 
       - name: "Cache third-party libraries"
         uses: actions/cache@v3
@@ -284,6 +327,16 @@ jobs:
             imagemagick gettext sox \
             vorbis-tools \
             cmake ninja-build
+
+      - name: Install Android NDK
+        # We need NDK r26, but the GitHub runner has only r25
+        run: |
+          mkdir -p output/download
+          cd output/download
+          wget --quiet https://dl.google.com/android/repository/android-ndk-${{env.NDK}}-linux.zip
+          unzip -q android-ndk-${{env.NDK}}-linux.zip
+          rm android-ndk-${{env.NDK}}-linux.zip
+          echo ANDROID_NDK_LATEST_HOME=$PWD/android-ndk-${{env.NDK}} >> $GITHUB_ENV
 
       - name: Compile XCSoar
         run: |
@@ -337,7 +390,16 @@ jobs:
       - id: cache-ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.type }}-${{ env.TARGET }}
+          key: ${{ env.TARGET }}
+
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
 
       - name: "Cache third-party libraries"
         uses: actions/cache@v3
@@ -434,6 +496,15 @@ jobs:
         with:
           key: macos
 
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
+
       - name: Install dependencies
         run: |
           brew install \
@@ -441,6 +512,7 @@ jobs:
             quilt \
             librsvg \
             imagemagick gettext sox \
+            fmt \
             sdl2 \
             libsodium \
             freetype \
@@ -455,17 +527,10 @@ jobs:
         # LLVM bug in Apple Xcode which crashes clang with "fatal
         # error: error in backend: Cannot select: intrinsic
         # %llvm.coro.size"
-
-        # This build uses third-party libraries installed via
-        # Homebrew, not built using build/thirdparty.py; to be
-        # compatible with Homebrew's builds, we need
-        # to build with "-mmacosx-version-min=12.0".
         run: |
           gmake -j$(sysctl -n hw.logicalcpu) TARGET=${{env.TARGET }} USE_CCACHE=y \
             OPTIMIZE="-O0" \
-            USE_THIRDPARTY_LIBS=n \
             USE_HOMEBREW=y \
-            OSX_MIN_SUPPORTED_VERSION=12.0 \
             V=2 \
             everything check
 
@@ -508,9 +573,19 @@ jobs:
         with:
           key: ios
 
+      - name: "Cache Boost"
+        uses: actions/cache@v3
+        with:
+          key: ${{ env.BOOST }}-${{ hashFiles('lib/boost/patches/**') }}
+          path: |
+            ${{ github.workspace }}/output/download/${{ env.BOOST }}.tar.bz2
+            ${{ github.workspace }}/output/src/stamp-${{ env.BOOST }}
+            ${{ github.workspace }}/output/src/${{ env.BOOST }}/boost
+
       - name: Install dependencies
         run: |
           brew install \
+            automake autoconf libtool \
             make \
             quilt \
             librsvg \

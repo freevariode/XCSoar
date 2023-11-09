@@ -12,8 +12,8 @@
 #include "Form/DataField/Prefix.hpp"
 #include "Form/DataField/Listener.hpp"
 #include "FLARM/FlarmNetRecord.hpp"
-#include "FLARM/FlarmDetails.hpp"
-#include "FLARM/FlarmId.hpp"
+#include "FLARM/Details.hpp"
+#include "FLARM/Id.hpp"
 #include "FLARM/Global.hpp"
 #include "FLARM/TrafficDatabases.hpp"
 #include "util/StaticString.hxx"
@@ -29,6 +29,7 @@
 #include "Tracking/TrackingGlue.hpp"
 #include "Engine/Waypoint/Waypoints.hpp"
 #include "Components.hpp"
+#include "DataComponents.hpp"
 #include "Pan.hpp"
 
 using namespace std::chrono;
@@ -403,8 +404,8 @@ TrafficListWidget::UpdateList()
             item.vector = GeoVector(CommonInterface::Basic().location,
                                     i.second.location);
 
-          const auto wp = way_points.GetNearestLandable(i.second.location,
-                                                        20000);
+          const auto wp = data_components->waypoints->GetNearestLandable(i.second.location,
+                                                                         20000);
           if (wp != nullptr) {
             item.near_name = wp->name.c_str();
             item.near_distance = wp->location.DistanceS(i.second.location);
