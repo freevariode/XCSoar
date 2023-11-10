@@ -260,6 +260,9 @@ FreeVarioDevice::OnSensorUpdate(const MoreData &basic){
      sprintf(nmeaOutbuffer,"PFV,VAR,%f", basic.total_energy_vario);
      PortWriteNMEA(port, nmeaOutbuffer, env);
    }
+
+     sprintf(nmeaOutbuffer,"PFV,VAN,%f", basic.netto_vario);
+     PortWriteNMEA(port, nmeaOutbuffer, env);
 }
 
 /*
