@@ -55,7 +55,7 @@ public:
                            const char *name,
                            OperationEnvironment &env) override;
   bool ExchangeRadioFrequencies(OperationEnvironment &env,
-                                NMEAInfo &info) override;
+                                NMEAInfo &info);
   bool PutTransponderCode(TransponderCode code, OperationEnvironment &env) override;
   void OnCalculatedUpdate(const MoreData &basic,
                           [[maybe_unused]] const DerivedInfo &calculated) override;
@@ -186,7 +186,7 @@ ParsePAAVS(NMEAInputLine &line, NMEAInfo &info, ACDDevice *dev) noexcept
       info.settings.has_transponder_mode.Update(info.clock);
     }
   } else {
-    return false;
+     return false;
   }
 
   return true;
@@ -307,6 +307,13 @@ ACDDevice::OnCalculatedUpdate(const MoreData &basic,
 
     FormatGPGGA(buffer, sizeof(buffer), basic);
     PortWriteNMEA(port, buffer, env);
+  }
+  
+  if (basic.settings.qnh_available.IsValid()){
+    char buffer[100];
+    unsigned qnh = basic.settings.qnh.GetPascal();
+    sprintf(buffer,"PAAVC,S,ALT,QNH,%u",qnh);
+   PortWriteNMEA(port, buffer, env);
   }
 }
 
