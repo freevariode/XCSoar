@@ -141,6 +141,8 @@ DRIVER_SOURCES = \
 	$(DRIVER_SRC_DIR)/Larus.cpp \
 	$(DRIVER_SRC_DIR)/LoEFGREN.cpp \
 	$(DRIVER_SRC_DIR)/LX160.cpp \
+	$(DRIVER_SRC_DIR)/AR62xx.cpp \
+	$(DRIVER_SRC_DIR)/FreeVario.cpp \
 	$(DRIVER_SRC_DIR)/ATR833/Device.cpp \
 	$(DRIVER_SRC_DIR)/ATR833/Register.cpp
 

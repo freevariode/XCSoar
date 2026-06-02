@@ -4,6 +4,7 @@
 #include "Device/Register.hpp"
 #include "Device/Driver.hpp"
 #include "Device/Driver/AirControlDisplay.hpp"
+#include "Device/Driver/AR62xx.hpp"
 #include "Device/Driver/CAI302.hpp"
 #include "Device/Driver/CaiGpsNav.hpp"
 #include "Device/Driver/CaiLNav.hpp"
@@ -37,6 +38,7 @@
 #include "Device/Driver/BlueFlyVario.hpp"
 #include "Device/Driver/OpenVario.hpp"
 #include "Device/Driver/Larus.hpp"
+#include "Device/Driver/FreeVario.hpp"
 #include "Device/Driver/Vaulter.hpp"
 #include "Device/Driver/ATR833/Register.hpp"
 #include "Device/Driver/XCTracer.hpp"
@@ -56,6 +58,7 @@ static const struct DeviceRegister *const driver_list[] = {
   &cai302_driver,
   &ew_driver,
   &altair_pro_driver,
+  &ar62xx_driver,
   &vega_driver,
   &gps_nav_driver,
   &nmea_out_driver,
@@ -83,6 +86,7 @@ static const struct DeviceRegister *const driver_list[] = {
   &cai_lnav_driver,
   &open_vario_driver,
   &larus_driver,
+  &free_vario_driver,
   &vaulter_driver,
   &krt2_driver,
   &atr833_driver,
