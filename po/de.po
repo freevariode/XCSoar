@@ -994,7 +994,13 @@ msgid "Vest"
 msgstr "Vvorraussichtlich"
 
 msgid "Quit program?"
-msgstr "Programm beenden?"
+msgstr "In die Shell gehen?"
+
+msgid "Reboot System?"
+msgstr "OpenVario Neustarten?"
+
+msgid "Shutdown System?"
+msgstr "OpenVario herunterfahren?"
 
 #, no-c-format
 msgid "European"
@@ -1414,6 +1420,9 @@ msgstr "Bestätige, wirklich alle Flüge vom Gerät löschen?"
 
 msgid "Reboot"
 msgstr "Neustart"
+
+msgid "Shutdown"
+msgstr "Beenden"
 
 #, no-c-format
 msgid "Temperature"
@@ -2374,7 +2383,7 @@ msgid "Replay"
 msgstr "Wiedergabe"
 
 msgid "Quit"
-msgstr "Beenden"
+msgstr "Shell"
 
 msgid "What do you want to do?"
 msgstr "Was möchten Sie tun?"
